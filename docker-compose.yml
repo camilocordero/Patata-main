@@ -1,0 +1,39 @@
+version: '3.3'
+
+services:
+    server:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        image: patata-backend
+        container_name: patata-backend
+        command: npm start
+        volumes:
+            - ./backend/:/usr/src/app
+            - /usr/src/app/node_modules
+        ports:
+            - '80:80'
+            - '443:443'
+        depends_on:
+            - mongo
+        networks:
+            - app-network
+    mongo:
+        image: mongo:4.2
+        container_name: patata-db
+        volumes:
+            - data-volume:/data/db
+        ports:
+            - '27017:27017'
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+    data-volume:
+    node_modules:
+    web-root:
+        driver: local
